@@ -6,7 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class HelloApplication extends Application {
 
@@ -14,10 +16,19 @@ public class HelloApplication extends Application {
     private static Stage stg;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, ClassNotFoundException {
+
+        String pageToOpen = "login.fxml";
+
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("user.txt"));
+        Object test = ois.readObject();
+
+        if(test != null){
+            pageToOpen = "items-view.fxml";
+        }
 
         this.stg = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(pageToOpen));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
         stage.setResizable(false);

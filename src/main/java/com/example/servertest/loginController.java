@@ -60,7 +60,7 @@ public class loginController implements Initializable{
 
             this.client.close();
             HelloApplication g = new HelloApplication();
-            g.changeScene("hello-view.fxml");
+            g.changeScene("items-view.fxml");
         }
     }
 }

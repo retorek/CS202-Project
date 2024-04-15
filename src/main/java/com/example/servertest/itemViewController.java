@@ -1,5 +1,6 @@
 package com.example.servertest;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,6 +33,9 @@ public class itemViewController implements Initializable {
     @FXML
     Label comment;
 
+    @FXML
+    Button prev;
+
     boolean isSet;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,19 +62,22 @@ public class itemViewController implements Initializable {
 
         Item item = (Item)test;
 
+        System.out.println(item.isAvailable);
+
 
         productName.setText(item.name);
         productPrice.setText(String.valueOf(item.price));
 
-        if(item.isAvailable){
-            buyButton.setText("Bid");
-            buyButton.setStyle("-fx-background-color: #00ff00");
-        }else{
-            buyButton.setText("Bid");
-            buyButton.setStyle("-fx-background-color: #00ff00");
+        buyButton.setText("Bid");
+        buyButton.setStyle("-fx-background-color: #00ff00");
+
+        if(!item.isAvailable){
+
             buyButton.setDisable(true);
             comment.setText("This product is not available");
             comment.setStyle("-fx-text-fill: red");
+
+            textField.setDisable(true);
         }
 
         buyButton.setOnAction(actionEvent -> {
@@ -93,6 +100,11 @@ public class itemViewController implements Initializable {
             }
 
         });
+    }
+
+    public void previous(ActionEvent event) throws IOException {
+        HelloApplication h = new HelloApplication();
+        h.changeScene("items-view.fxml");
     }
 
 }

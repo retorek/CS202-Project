@@ -3,21 +3,20 @@ package com.example.servertest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
-public class itemsController implements Initializable{
+public class itemsViewController implements Initializable{
 
     Client client;
 
@@ -35,6 +34,9 @@ public class itemsController implements Initializable{
 
     @FXML
     Button credentials;
+    
+    @FXML
+    Button logOutButton;
 
     User user;
 
@@ -43,6 +45,9 @@ public class itemsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.client = new Client();
+
+        vbox.setPadding(new Insets(20));
+        updateButton.setText("Update");
 
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream("user.txt"));
@@ -57,6 +62,7 @@ public class itemsController implements Initializable{
         credentials.setStyle("-fx-background-color: white");
 
         updateButton.setStyle("-fx-background-color: #5c9eda");
+        logOutButton.setStyle("-fx-background-color: #5c9eda");
 
         try {
             this.items = this.client.requestItems();
@@ -114,9 +120,33 @@ public class itemsController implements Initializable{
     }
 
     private void checkItem(Item item) throws IOException {
+
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("item.txt"));
+        oos.writeObject(item);
+
         HelloApplication g = new HelloApplication();
         g.changeScene("item-view.fxml");
     }
+
+    @FXML
+    private void logOut(ActionEvent event) throws IOException {
+
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("user.txt"));
+        oos.writeObject(null);
+
+        this.client.close();
+
+        HelloApplication h = new HelloApplication();
+        h.changeScene("login.fxml");
+   }
+
+   @FXML
+   private void checkProfile(ActionEvent event) throws IOException {
+        this.client.close();
+
+        HelloApplication h = new HelloApplication();
+        h.changeScene("profile-view.fxml");
+   }
 
     public Region lineBreak(){
         return new Region(){{

@@ -6,10 +6,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.servertest.loginController">
    <children>
-      <Label layoutX="312.0" layoutY="151.0" text="ID:" />
+      <Label layoutX="273.0" layoutY="151.0" text="Username:" />
       <Label layoutX="274.0" layoutY="228.0" text="Password:" />
       <TextField fx:id="idField" layoutX="343.0" layoutY="147.0" />
       <PasswordField fx:id="passwordField" layoutX="343.0" layoutY="224.0" />

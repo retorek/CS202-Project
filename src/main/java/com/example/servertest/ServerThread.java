@@ -66,7 +66,19 @@ public class ServerThread extends Thread{
 
     private User checkUser(String id, String password){
         ArrayList<User> users = new ArrayList<>();
-        users.add(new User("0001", "12345678", "A", "B"));
+
+        User user = new User("0001", "12345678", "A", "B");
+        user.itemsBought.add(new Item("test1", 25, false));
+        user.itemsBought.add(new Item("test2", 98, false));
+        user.itemsBought.add(new Item("test3", 54, false));
+        user.itemsBought.add(new Item("test4", 75, false));
+
+        user.itemsPosted.add(new Item("test21", 101, false));
+        user.itemsPosted.add(new Item("test22", 43, true));
+        user.itemsPosted.add(new Item("test23", 32, false));
+        user.itemsPosted.add(new Item("test24", 60, true));
+        users.add(user);
+
         users.add(new User("0002", "12345679", "C", "D"));
         users.add(new User("0003", "12345680", "E", "F"));
         users.add(new User("0004", "12345681", "G", "H"));

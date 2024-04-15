@@ -4,8 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-
 
 <AnchorPane id="priceId" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.servertest.itemViewController">
    <children>
@@ -13,8 +11,8 @@
       <Label fx:id="productPrice" layoutX="442.0" layoutY="160.0" />
       <Button fx:id="buyButton" layoutX="470.0" layoutY="242.0" mnemonicParsing="false" text="Button" />
       <TextField fx:id="textField" layoutX="375.0" layoutY="242.0" prefHeight="25.0" prefWidth="67.0" />
-      <BorderPane layoutX="-2.0" layoutY="-3.0" prefHeight="406.0" prefWidth="342.0" />
       <Label fx:id="comment" layoutX="374.0" layoutY="283.0" prefHeight="17.0" prefWidth="220.0" />
       <Label layoutX="381.0" layoutY="215.0" text="Your bid:" />
+      <Button fx:id="prev" layoutX="47.0" layoutY="44.0" mnemonicParsing="false" onAction="#previous" text="Return" />
    </children>
 </AnchorPane>
