@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
         String pageToOpen = "login.fxml";
 
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream("user.txt"));
-        Object test = ois.readObject();
+        User test = (User)ois.readObject();
 
         if(test != null){
             pageToOpen = "items-view.fxml";

@@ -11,6 +11,7 @@ public class Client implements Serializable {
     private DataOutputStream out;
 
     private ObjectInputStream ois;
+    private ObjectOutputStream oos;
 
     private Socket socket;
 
@@ -18,6 +19,7 @@ public class Client implements Serializable {
         this.in = null;
         this.out = null;
         this.ois = null;
+        this.oos = null;
 
         try{
             this.socket = new Socket("localhost", 8888);
@@ -29,6 +31,7 @@ public class Client implements Serializable {
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(in);
+            this.oos = new ObjectOutputStream(out);
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -48,6 +51,18 @@ public class Client implements Serializable {
         return ((ArrayList<Item>) test);
     }
 
+    public Item requestItem(String id) throws IOException {
+        this.out.writeUTF("/item " + id);
+
+        Object test = null;
+        try{
+            test = this.ois.readObject();
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return (Item)test;
+    }
+
     public User requestConnection(String request) throws IOException, ClassNotFoundException {
         this.out.writeUTF(request);
         Object test = this.ois.readObject();
@@ -57,6 +72,14 @@ public class Client implements Serializable {
         }else{
             return (User)test;
         }
+    }
+
+    public String requestAddUser(User user) throws IOException, InterruptedException {
+        this.out.writeUTF("/addUser");
+        Thread.sleep(1000);
+        this.oos.writeObject(user);
+        String result = this.in.readUTF();
+        return result;
     }
 
     public void close() throws IOException {

@@ -28,6 +28,9 @@ public class loginController implements Initializable{
 
     Client client;
 
+    @FXML
+    Label signUp;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.client = new Client();
@@ -62,5 +65,13 @@ public class loginController implements Initializable{
             HelloApplication g = new HelloApplication();
             g.changeScene("items-view.fxml");
         }
+    }
+
+    @FXML
+    private void signUp(ActionEvent event) throws IOException {
+        this.client.close();
+
+        HelloApplication h = new HelloApplication();
+        h.changeScene("signup.fxml");
     }
 }

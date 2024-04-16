@@ -18,10 +18,12 @@ public class ServerThread extends Thread{
         DataInputStream in = null;
         DataOutputStream out = null;
         ObjectOutputStream oos = null;
+        ObjectInputStream ois = null;
         try{
              in = new DataInputStream(this.socket.getInputStream());
              out = new DataOutputStream(this.socket.getOutputStream());
              oos = new ObjectOutputStream(out);
+             ois = new ObjectInputStream(in);
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -41,6 +43,15 @@ public class ServerThread extends Thread{
                 if(request.equals("/items")){
                     oos.writeObject(fetchItems());
                 }
+                if(request.startsWith("/item ")){
+                    String[] sp = request.split(" ");
+                    String id = sp[1];
+                    oos.writeObject(checkItem(id));
+                }
+                if(request.equals("/addUser")){
+                    User user = (User)ois.readObject();
+                    out.writeUTF(userExist(user));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 try {
@@ -48,6 +59,8 @@ public class ServerThread extends Thread{
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -55,28 +68,38 @@ public class ServerThread extends Thread{
     private ArrayList<Item> fetchItems(){
         ArrayList<Item> res = new ArrayList<>();
 
-        res.add(new Item("A", 10, true));
-        res.add(new Item("B", 11, false));
-        res.add(new Item("C", 12, true));
-        res.add(new Item("D", 13, false));
-        res.add(new Item("E", 14, true));
+        res.add(new Item("A", "I00A", 10, true));
+        res.add(new Item("B", "I00B", 11, false));
+        res.add(new Item("C", "I00C", 12, true));
+        res.add(new Item("D", "I00D", 13, false));
+        res.add(new Item("E", "I00E",14, true));
 
         return res;
+    }
+
+    private Item checkItem(String id){
+        ArrayList<Item> items = fetchItems();
+        for(Item item : items){
+            if(item.id.equals(id)){
+                return item;
+            }
+        }
+        return null;
     }
 
     private User checkUser(String id, String password){
         ArrayList<User> users = new ArrayList<>();
 
         User user = new User("0001", "12345678", "A", "B");
-        user.itemsBought.add(new Item("test1", 25, false));
-        user.itemsBought.add(new Item("test2", 98, false));
-        user.itemsBought.add(new Item("test3", 54, false));
-        user.itemsBought.add(new Item("test4", 75, false));
+        user.itemsBought.add(new Item("test1", "I001",25, false));
+        user.itemsBought.add(new Item("test2", "I002",98, false));
+        user.itemsBought.add(new Item("test3", "I003",54, false));
+        user.itemsBought.add(new Item("test4", "I004",75, false));
 
-        user.itemsPosted.add(new Item("test21", 101, false));
-        user.itemsPosted.add(new Item("test22", 43, true));
-        user.itemsPosted.add(new Item("test23", 32, false));
-        user.itemsPosted.add(new Item("test24", 60, true));
+        user.itemsPosted.add(new Item("test21", "I011", 101, false));
+        user.itemsPosted.add(new Item("test22", "I012", 43, true));
+        user.itemsPosted.add(new Item("test23", "I013", 32, false));
+        user.itemsPosted.add(new Item("test24", "I014", 60, true));
         users.add(user);
 
         users.add(new User("0002", "12345679", "C", "D"));
@@ -89,5 +112,16 @@ public class ServerThread extends Thread{
             }
         }
         return null;
+    }
+
+    private String userExist(User user){
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User("", "", "", ""));
+        for(User u : users){
+            if(u.id.equals(user.id)){
+                return "Fail";
+            }
+        }
+        return "Success";
     }
 }

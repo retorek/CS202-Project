@@ -37,9 +37,37 @@ public class itemViewController implements Initializable {
     Button prev;
 
     boolean isSet;
+
+    Client client;
+
+    Item item;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        ObjectInputStream ois;
+        Object test;
+        try {
+            ois = new ObjectInputStream(new FileInputStream("item.txt"));
+            test = ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.item = (Item)test;
+
+        this.client = new Client();
+
+        try {
+            this.item = client.requestItem(this.item.id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            this.client.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         try{
             setItem();
@@ -49,20 +77,6 @@ public class itemViewController implements Initializable {
     }
 
     private void setItem() throws IOException, ClassNotFoundException {
-
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("item.txt"));
-
-        Object test;
-
-        try {
-            test = ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        Item item = (Item)test;
-
-        System.out.println(item.isAvailable);
 
 
         productName.setText(item.name);

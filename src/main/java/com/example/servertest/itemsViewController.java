@@ -124,6 +124,8 @@ public class itemsViewController implements Initializable{
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("item.txt"));
         oos.writeObject(item);
 
+        this.client.close();
+
         HelloApplication g = new HelloApplication();
         g.changeScene("item-view.fxml");
     }
