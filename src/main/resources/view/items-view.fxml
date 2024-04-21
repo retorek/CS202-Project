@@ -18,8 +18,8 @@
             <Button fx:id="updateButton" layoutX="34.0" layoutY="27.0" mnemonicParsing="false" onAction="#refresh" text="Update" />
              <Button fx:id="credentials" layoutX="445.0" layoutY="27.0" maxWidth="Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkProfile" text="Button" />
              <Button fx:id="logOutButton" layoutX="526.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-            <TextField fx:id="searchField" layoutX="145.0" layoutY="27.0" />
-            <Button fx:id="searchButton" layoutX="311.0" layoutY="27.0" mnemonicParsing="false" onAction="#searchItems" text="Search" />
+            <TextField fx:id="searchField" layoutX="126.0" layoutY="28.0" />
+            <Button fx:id="searchButton" layoutX="295.0" layoutY="27.0" mnemonicParsing="false" onAction="#searchItems" text="Search" />
          </children></AnchorPane>
   </content>
 </ScrollPane>

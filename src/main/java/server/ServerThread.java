@@ -42,10 +42,16 @@ public class ServerThread extends Thread {
                     oos.writeObject(checkUser(username, pass));
                 }
                 if (request.startsWith("/search ")) {
-                    String searchTerm = request.split(" ")[1];
-                    ArrayList<Item> items = Marketplace.searchItems(searchTerm);
-                    System.out.println(items.size());
-                    oos.writeObject(items);
+                    String[] args = request.split(" ");
+                    if(args.length < 2){
+                        oos.writeObject(Marketplace.getAvailableItems());
+                        continue;
+                    }else{
+                        String searchTerm = args[1];
+                        ArrayList<Item> items = Marketplace.searchItems(searchTerm);
+                        // send items back to client
+                        oos.writeObject(items);
+                    }
                 }
                 if (request.equals("/items")) {
                     oos.writeObject(Marketplace.getAvailableItems());

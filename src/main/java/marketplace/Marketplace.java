@@ -53,6 +53,17 @@ public class Marketplace {
         return users;
     }
 
+    public static ArrayList<Item> searchItems(String searchTerm) throws SQLException {
+        items = loadAllItems(conn);
+        ArrayList<Item> searchResults = new ArrayList<>();
+        for (Item item : items) {
+            if (item.name.contains(searchTerm) || item.description.contains(searchTerm)) {
+                if(item.isAvailable) searchResults.add(item);
+            }
+        }
+        return searchResults;
+    }
+
     public static void addItem(Item item,User user, Connection conn) throws SQLException {
         items.add(item);
         item.saveToDatabase(conn);

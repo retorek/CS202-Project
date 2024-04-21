@@ -41,16 +41,15 @@ public class ItemsController implements Initializable{
     @FXML
     Button logOutButton;
 
-    User user;
-
-    ArrayList<Item> items;
-
     @FXML
     TextField searchField;
 
     @FXML
     Button searchButton;
 
+    User user;
+
+    ArrayList<Item> items;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -73,6 +72,7 @@ public class ItemsController implements Initializable{
 
         updateButton.setStyle("-fx-background-color: #5c9eda");
         logOutButton.setStyle("-fx-background-color: #5c9eda");
+        searchButton.setStyle("-fx-background-color: #5c9eda");
 
         try {
             this.items = this.client.requestItems();
@@ -92,6 +92,13 @@ public class ItemsController implements Initializable{
             throw new RuntimeException(e);
         }
 
+        // Append the items to the vbox
+        appendItems();
+
+
+    }
+
+    private void appendItems(){
         // Clear the existing items from the vbox
         vbox.getChildren().clear();
 
@@ -144,13 +151,9 @@ public class ItemsController implements Initializable{
     }
 
     public void searchItems(ActionEvent event) {
-        System.out.println("Searching for items");
         String searchTerm = searchField.getText();
-        System.out.println("Works until here");
         this.items = this.client.searchItems(searchTerm);
-        System.out.println("Search term: " + searchTerm);
-        System.out.println("Items Found: " + items.size());
-        loadItems();
+        appendItems();
     }
 
     public void refresh(ActionEvent event){
