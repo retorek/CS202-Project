@@ -89,22 +89,6 @@ public class Marketplace {
         return availableItems;
     }
 
-    public static ArrayList<Item> searchItems(String searchTerm) throws SQLException {
-        items = loadAllItems(conn);
-        ArrayList<Item> searchResults = new ArrayList<>();
-        System.out.println("Search term: " + searchTerm);
-        for (Item item : items) {
-            if (item.name.contains(searchTerm) || item.description.contains(searchTerm)) {
-                if(item.isAvailable){
-                    searchResults.add(item);
-                    System.out.println("Item found: " + item.name);
-                }
-            }
-        }
-        System.out.println(searchResults.size());
-        return searchResults;
-    }
-
     public static User getUserById(int id) {
         for (User user : users) {
             if (user.id == id) {

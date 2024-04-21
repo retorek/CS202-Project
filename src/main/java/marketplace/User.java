@@ -25,7 +25,6 @@ public class User implements Serializable {
     public String lastName;
     public ArrayList<Item> itemsPosted = new ArrayList<>();
     public ArrayList<Item> itemsBought = new ArrayList<>();
-    public ArrayList<Item> cart;
 
 
     private static final String INSERT_USER_SQL = "INSERT INTO Users VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -58,22 +57,10 @@ public class User implements Serializable {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.cart = new ArrayList<>();
     }
 
     public User(){
 
-    }
-
-    public void addToCart(Item item) {
-        this.cart.add(item);
-    }
-
-    public void checkout(Connection conn) throws SQLException {
-        for (Item item : cart) {
-            buyItem(item, conn);
-        }
-        cart.clear();
     }
 
     public void buyItem(Item item, Connection conn) throws SQLException {

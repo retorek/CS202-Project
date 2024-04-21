@@ -94,8 +94,6 @@ public class ItemsController implements Initializable{
 
         // Append the items to the vbox
         appendItems();
-
-
     }
 
     private void appendItems(){
@@ -181,7 +179,6 @@ public class ItemsController implements Initializable{
 
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("user.txt"));
         oos.writeObject(null);
-
 
         this.client.close();
 

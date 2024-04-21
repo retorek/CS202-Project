@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.UserNotFoundException;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -20,7 +21,7 @@ import java.util.ResourceBundle;
 
 import static java.lang.Thread.sleep;
 
-public class LoginController implements Initializable{
+public class LoginController implements Initializable {
 
     @FXML
     TextField username;
@@ -48,30 +49,29 @@ public class LoginController implements Initializable{
         this.client = new Client();
     }
 
-    public void login(ActionEvent event) throws InterruptedException, IOException {
+    public void login(ActionEvent event) throws IOException {
         String username = this.username.getText();
         String pass = password.getText();
 
         String req = "/connect " + username + " " + pass;
 
         User user;
-
-        user = this.client.requestConnection(req);
-
-        if(user == null){
-            comment.setText("Wrong Credentials!");
+        try {
+            user = this.client.requestConnection(req);
+        } catch (UserNotFoundException e) {
             comment.setStyle("-fx-text-fill: red");
-        }else{
-            comment.setStyle("-fx-text-fill: green");
-            comment.setText("Connected Successfully, Welcome "+ user.firstName + " " + user.lastName);
-
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("user.txt"));
-            oos.writeObject(user);
-
-            this.client.close();
-            MainController g = new MainController();
-            g.changeScene("items-view.fxml");
+            comment.setText(e.getMessage());
+            return;
         }
+        comment.setStyle("-fx-text-fill: green");
+        comment.setText("Connected Successfully, Welcome " + user.firstName + " " + user.lastName);
+
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("user.txt"));
+        oos.writeObject(user);
+
+        this.client.close();
+        MainController g = new MainController();
+        g.changeScene("items-view.fxml");
     }
 
     @FXML

@@ -1,5 +1,8 @@
 package server;
 
+import exceptions.ExistentUsernameException;
+import exceptions.ItemNotAvailableException;
+import exceptions.UserNotFoundException;
 import marketplace.Item;
 import marketplace.User;
 import marketplace.Marketplace;
@@ -86,7 +89,7 @@ public class ServerThread extends Thread {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ItemNotAvailableException | ExistentUsernameException e) {
             throw new RuntimeException(e);
         }
     }
@@ -100,18 +103,26 @@ public class ServerThread extends Thread {
         return null;
     }
 
-    private void buyItem(String userId, String itemId) {
+    private void buyItem(String userId, String itemId) throws ItemNotAvailableException {
         try {
             User user = Marketplace.getUserById(Integer.parseInt(userId));
             assert user != null;
-            user.buyItem(Objects.requireNonNull(Marketplace.getItemById(Integer.parseInt(itemId))), db.getConnection());
+            Item item = Objects.requireNonNull(Marketplace.getItemById(Integer.parseInt(itemId)));
+            if(!item.isAvailable){
+                throw new ItemNotAvailableException();
+            }
+            user.buyItem(item, db.getConnection());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private String addUser(User user) {
+    private String addUser(User user) throws ExistentUsernameException {
         try {
+            if(Marketplace.getUserByUsername(user.username) != null){
+                throw new ExistentUsernameException();
+            }
             Marketplace.addUser(user, db.getConnection());
             return "Success";
         } catch (SQLException e) {
@@ -123,6 +134,7 @@ public class ServerThread extends Thread {
     private User checkUser(String username, String password) throws SQLException {
         User user = Marketplace.getUserByUsername(username);
         if (user != null && user.password.equals(password)) {
+            System.out.println("User found");
             return user;
         }
         return null;

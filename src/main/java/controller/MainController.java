@@ -29,7 +29,7 @@ public class MainController extends Application {
             e.printStackTrace();
         }
 
-        //Initialize th iid counters
+        //Initialize th id counters
         try (Connection conn = db.getConnection()) {
             User.initializeIdCounter(conn);
             Item.initializeIdCounter(conn);

@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.ItemNotAvailableException;
 import marketplace.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,23 +45,23 @@ public class ItemController implements Initializable {
 
         try {
             ObjectInputStream userOis = new ObjectInputStream(new FileInputStream("user.txt"));
-            this.user = (User)userOis.readObject();
+            this.user = (User) userOis.readObject();
 
             ObjectInputStream itemOis = new ObjectInputStream(new FileInputStream("item.txt"));
-            this.item = (Item)itemOis.readObject();
+            this.item = (Item) itemOis.readObject();
             this.client.requestItem(item.id);
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        try{
+        try {
             setItem();
-        }catch(IOException e){
-            e.printStackTrace();
+        } catch (IOException | ItemNotAvailableException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    private void setItem() throws IOException {
+    private void setItem() throws IOException, ItemNotAvailableException {
         if (item != null) {
             productName.setText(item.name);
             productPrice.setText(String.valueOf(item.price));
@@ -69,15 +70,16 @@ public class ItemController implements Initializable {
             buyButton.setText("Buy");
             buyButton.setStyle("-fx-background-color: #00ff00");
 
-            if(!item.isAvailable){
+            if (!item.isAvailable) {
                 buyButton.setDisable(true);
                 comment.setText("This product is not available");
                 comment.setStyle("-fx-text-fill: red");
+                throw new ItemNotAvailableException();
             }
 
             buyButton.setOnAction(actionEvent -> {
                 try {
-                    this.client.buyItem(user,item);
+                    this.client.buyItem(user, item);
                     comment.setText("Item bought");
                     comment.setStyle("-fx-text-fill: green");
                 } catch (IOException e) {

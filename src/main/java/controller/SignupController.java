@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.ExistentUsernameException;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -70,23 +71,22 @@ public class SignupController implements Initializable {
 
         this.client = new Client();
 
-        String result = client.requestAddUser(new User(username, password1, firstName, lastName));
-        if(result.equals("Failure")){
-            wrongField.setText("Existent username! Please try another username");
+        try {
+            client.requestAddUser(new User(username, password1, firstName, lastName));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Registration succeeded");
+            alert.setHeaderText(null);
+            alert.setContentText("Your registration was successful!");
+            alert.showAndWait();
+            this.client.close();
+            MainController h = new MainController();
+            h.changeScene("LoginView.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ExistentUsernameException e) {
+            wrongField.setText(e.getMessage());
             wrongField.setStyle("-fx-text-fill: red");
-            return;
         }
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Registration succeeded");
-        alert.setHeaderText(null);
-
-        alert.setContentText("Your registration was successful!");
-        alert.showAndWait();
-
-        this.client.close();
-        MainController h = new MainController();
-        h.changeScene("LoginView.fxml");
     }
 
 }

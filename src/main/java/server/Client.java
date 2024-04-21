@@ -1,5 +1,7 @@
 package server;
 
+import exceptions.ExistentUsernameException;
+import exceptions.UserNotFoundException;
 import marketplace.Item;
 import marketplace.User;
 
@@ -64,14 +66,14 @@ public class Client implements Serializable {
         return (Item)test;
     }
 
-    public User requestConnection(String request) throws IOException {
+    public User requestConnection(String request) throws IOException, UserNotFoundException {
         String[] sp = request.split(" ");
         String username = sp[1];
         String pass = sp[2];
         this.out.writeUTF("/connect " + username + " " + pass);
-        Object test = null;
+        Object user = null;
         try {
-            test = this.ois.readObject();
+            user = this.ois.readObject();
         } catch (EOFException e) {
             System.err.println("End of stream reached before object could be read");
             return null;
@@ -79,17 +81,21 @@ public class Client implements Serializable {
             throw new RuntimeException(e);
         }
 
-        if(test == null){
-            return null;
+        if(user == null){
+            throw new UserNotFoundException();
         }else{
-            return (User)test;
+            System.out.println("User found");
+            return (User)user;
         }
     }
 
-    public String requestAddUser(User user) throws IOException {
+    public String requestAddUser(User user) throws IOException, ExistentUsernameException {
         this.out.writeUTF("/addUser");
         this.oos.writeObject(user);
         String result = this.in.readUTF();
+        if(result.equals("Failure")){
+            throw new ExistentUsernameException();
+        }
         return result;
     }
 
