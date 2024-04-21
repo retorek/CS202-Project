@@ -8,6 +8,7 @@ import server.Database;
 import java.io.*;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ServerThread extends Thread {
@@ -39,6 +40,12 @@ public class ServerThread extends Thread {
                     String username = sp[1];
                     String pass = sp[2];
                     oos.writeObject(checkUser(username, pass));
+                }
+                if (request.startsWith("/search ")) {
+                    String searchTerm = request.split(" ")[1];
+                    ArrayList<Item> items = Marketplace.searchItems(searchTerm);
+                    System.out.println(items.size());
+                    oos.writeObject(items);
                 }
                 if (request.equals("/items")) {
                     oos.writeObject(Marketplace.getAvailableItems());

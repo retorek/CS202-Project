@@ -101,4 +101,13 @@ public class Client implements Serializable {
         this.socket.close();
     }
 
+    public ArrayList<Item> searchItems(String searchTerm) {
+        try {
+            this.out.writeUTF("/search " + searchTerm);
+            Object items = this.ois.readObject();
+            return (ArrayList<Item>) items;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

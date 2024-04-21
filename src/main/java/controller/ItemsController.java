@@ -45,6 +45,13 @@ public class ItemsController implements Initializable{
 
     ArrayList<Item> items;
 
+    @FXML
+    TextField searchField;
+
+    @FXML
+    Button searchButton;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.client = new Client();
@@ -134,6 +141,16 @@ public class ItemsController implements Initializable{
             // Add the VBox to the vbox
             vbox.getChildren().add(v);
         }
+    }
+
+    public void searchItems(ActionEvent event) {
+        System.out.println("Searching for items");
+        String searchTerm = searchField.getText();
+        System.out.println("Works until here");
+        this.items = this.client.searchItems(searchTerm);
+        System.out.println("Search term: " + searchTerm);
+        System.out.println("Items Found: " + items.size());
+        loadItems();
     }
 
     public void refresh(ActionEvent event){
