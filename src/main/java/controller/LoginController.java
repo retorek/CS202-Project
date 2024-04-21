@@ -1,6 +1,10 @@
 package controller;
 
+import javafx.geometry.Pos;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import marketplace.User;
 import javafx.event.ActionEvent;
@@ -25,7 +29,7 @@ public class LoginController implements Initializable{
     PasswordField password;
 
     @FXML
-    Text comment;
+    Label comment;
 
     @FXML
     Button loginButton;
@@ -33,10 +37,14 @@ public class LoginController implements Initializable{
     Client client;
 
     @FXML
-    Label signUp;
+    Hyperlink signUp;
+
+    @FXML
+    HBox hBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        hBox.setAlignment(Pos.CENTER);
         this.client = new Client();
     }
 
@@ -51,8 +59,8 @@ public class LoginController implements Initializable{
         user = this.client.requestConnection(req);
 
         if(user == null){
+            comment.setText("Wrong Credentials!");
             comment.setStyle("-fx-text-fill: red");
-            comment.setText("Wrong credentials");
         }else{
             comment.setStyle("-fx-text-fill: green");
             comment.setText("Connected Successfully, Welcome "+ user.firstName + " " + user.lastName);
@@ -67,7 +75,7 @@ public class LoginController implements Initializable{
     }
 
     @FXML
-    private void signUp(MouseEvent event) throws IOException {
+    private void signUp(ActionEvent event) throws IOException {
         this.client.close();
 
         MainController h = new MainController();

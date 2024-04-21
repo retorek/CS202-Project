@@ -1,5 +1,10 @@
 package controller;
 
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import marketplace.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,8 +15,10 @@ import javafx.scene.control.TextField;
 import server.Client;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class SignupController {
+public class SignupController implements Initializable {
 
     @FXML
     TextField firstName;
@@ -29,9 +36,17 @@ public class SignupController {
     PasswordField confirmPassword;
 
     @FXML
-    Text comment;
+    Label wrongField;
 
     Client client;
+
+    @FXML
+    HBox hBox;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        hBox.setAlignment(Pos.CENTER);
+    }
 
     @FXML
     private void register(ActionEvent event) throws IOException {
@@ -39,24 +54,26 @@ public class SignupController {
         String lastName = this.lastName.getText();
         String username = this.username.getText();
         String password1 = this.password.getText();
-        String password2 = this.password.getText();
+        String password2 = this.confirmPassword.getText();
 
         if(firstName.isEmpty() | lastName.isEmpty() | username.isEmpty() | password1.isEmpty() | password2.isEmpty()){
-            comment.setText("All fields must be filled!");
-            comment.setStyle("-fx-text-fill: red");
+            wrongField.setText("All fields must be filled!");
+            wrongField.setStyle("-fx-text-fill: red");
             return;
-        }else if(!password1.equals(password2)){
-            comment.setText("Password confirmation is incorrect!");
-            comment.setStyle("-fx-text-fill: red");
+        }
+
+        if(!password1.equals(password2)){
+            wrongField.setText("Password confirmation is incorrect!");
+            wrongField.setStyle("-fx-text-fill: red");
             return;
         }
 
         this.client = new Client();
 
         String result = client.requestAddUser(new User(username, password1, firstName, lastName));
-        if(result.equals("Fail")){
-            comment.setText("Existent username! Please try another username");
-            comment.setStyle("-fx-text-fill: red");
+        if(result.equals("Failure")){
+            wrongField.setText("Existent username! Please try another username");
+            wrongField.setStyle("-fx-text-fill: red");
             return;
         }
 
