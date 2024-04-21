@@ -1,5 +1,7 @@
-package com.example.servertest;
+package controller;
 
+import marketplace.Item;
+import marketplace.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import server.Client;
 
 import java.io.*;
 import java.net.URL;
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
-public class itemsViewController implements Initializable{
+public class ItemsController implements Initializable{
 
     Client client;
 
@@ -56,7 +59,7 @@ public class itemsViewController implements Initializable{
             throw new RuntimeException(e);
         }
 
-        StringBuilder sb = new StringBuilder(this.user.firstName + " " + this.user.lastName);
+        StringBuilder sb = new StringBuilder(this.user.username);
         credentials.setText(sb.toString());
         credentials.setStyle("-fx-text-fill: #5c9eda");
         credentials.setStyle("-fx-background-color: white");
@@ -115,7 +118,6 @@ public class itemsViewController implements Initializable{
         for(Object o : vbox.getChildren().toArray()){
             vbox.getChildren().remove(o);
         }
-
         setItems();
     }
 
@@ -126,7 +128,7 @@ public class itemsViewController implements Initializable{
 
         this.client.close();
 
-        HelloApplication g = new HelloApplication();
+        MainController g = new MainController();
         g.changeScene("item-view.fxml");
     }
 
@@ -138,15 +140,18 @@ public class itemsViewController implements Initializable{
 
         this.client.close();
 
-        HelloApplication h = new HelloApplication();
-        h.changeScene("login.fxml");
+        MainController h = new MainController();
+        h.changeScene("LoginView.fxml");
    }
 
    @FXML
    private void checkProfile(ActionEvent event) throws IOException {
         this.client.close();
 
-        HelloApplication h = new HelloApplication();
+       // Refresh the items list
+       refresh(event);
+
+        MainController h = new MainController();
         h.changeScene("profile-view.fxml");
    }
 

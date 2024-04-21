@@ -1,8 +1,12 @@
-package com.example.servertest;
+package controller;
 
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import marketplace.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
+import server.Client;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,19 +16,19 @@ import java.util.ResourceBundle;
 
 import static java.lang.Thread.sleep;
 
-public class loginController implements Initializable{
+public class LoginController implements Initializable{
 
     @FXML
-    TextField idField;
+    TextField username;
 
     @FXML
-    PasswordField passwordField;
+    PasswordField password;
 
     @FXML
-    Label comment;
+    Text comment;
 
     @FXML
-    Button login;
+    Button loginButton;
 
     Client client;
 
@@ -37,19 +41,14 @@ public class loginController implements Initializable{
     }
 
     public void login(ActionEvent event) throws InterruptedException, IOException {
-        String id = idField.getText();
-        String pass = passwordField.getText();
+        String username = this.username.getText();
+        String pass = password.getText();
 
-        StringBuilder sb = new StringBuilder("/connect " + id + " " + pass);
-        String req = sb.toString();
+        String req = "/connect " + username + " " + pass;
 
         User user;
 
-        try {
-            user = this.client.requestConnection(req);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        user = this.client.requestConnection(req);
 
         if(user == null){
             comment.setStyle("-fx-text-fill: red");
@@ -62,16 +61,16 @@ public class loginController implements Initializable{
             oos.writeObject(user);
 
             this.client.close();
-            HelloApplication g = new HelloApplication();
+            MainController g = new MainController();
             g.changeScene("items-view.fxml");
         }
     }
 
     @FXML
-    private void signUp(ActionEvent event) throws IOException {
+    private void signUp(MouseEvent event) throws IOException {
         this.client.close();
 
-        HelloApplication h = new HelloApplication();
-        h.changeScene("signup.fxml");
+        MainController h = new MainController();
+        h.changeScene("RegisterView.fxml");
     }
 }

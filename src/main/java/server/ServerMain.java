@@ -1,25 +1,31 @@
-package com.example.servertest;
+package server;
+
+import marketplace.Marketplace;
+import server.Database;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
 public class ServerMain {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         ServerSocket serverSocket = null;
         Socket socket;
 
-        try{
-            serverSocket = new ServerSocket(8888);
+        try {
+            Database db = new Database();
+            db.connect();
+
+            Marketplace marketplace = new Marketplace(db.getConnection());
+
+            serverSocket = new ServerSocket(8880);
             while(true){
                 try{
                     socket = serverSocket.accept();
-                    /*Runnable r = new ServerThread(socket);
-                    Thread t = new Thread(r);
-                    t.start();*/
 
-                    ServerThread s = new ServerThread(socket);
+                    ServerThread s = new ServerThread(socket, db);
                     s.start();
                 }catch(IOException e) {
                     System.err.println(e.getMessage());
@@ -27,6 +33,8 @@ public class ServerMain {
             }
         }catch(IOException e){
             System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

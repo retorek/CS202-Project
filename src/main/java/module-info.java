@@ -1,8 +1,13 @@
 module com.example.servertest {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
-    opens com.example.servertest to javafx.fxml;
-    exports com.example.servertest;
+    exports server;
+    opens server to javafx.fxml;
+    exports controller;
+    opens controller to javafx.fxml;
+    exports marketplace;
+    opens marketplace to javafx.fxml;
 }

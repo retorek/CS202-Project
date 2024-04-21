@@ -1,11 +1,13 @@
-package com.example.servertest;
+package server;
+
+import marketplace.Item;
+import marketplace.User;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client implements Serializable {
-
 
     private DataInputStream in;
     private DataOutputStream out;
@@ -15,14 +17,14 @@ public class Client implements Serializable {
 
     private Socket socket;
 
-    Client(){
+    public Client(){
         this.in = null;
         this.out = null;
         this.ois = null;
         this.oos = null;
 
         try{
-            this.socket = new Socket("localhost", 8888);
+            this.socket = new Socket("localhost", 8880);
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -37,7 +39,6 @@ public class Client implements Serializable {
         }
     }
 
-
     public ArrayList<Item> requestItems() throws IOException {
         this.out.writeUTF("/items");
 
@@ -51,7 +52,7 @@ public class Client implements Serializable {
         return ((ArrayList<Item>) test);
     }
 
-    public Item requestItem(String id) throws IOException {
+    public Item requestItem(int id) throws IOException {
         this.out.writeUTF("/item " + id);
 
         Object test = null;
@@ -63,9 +64,20 @@ public class Client implements Serializable {
         return (Item)test;
     }
 
-    public User requestConnection(String request) throws IOException, ClassNotFoundException {
-        this.out.writeUTF(request);
-        Object test = this.ois.readObject();
+    public User requestConnection(String request) throws IOException {
+        String[] sp = request.split(" ");
+        String username = sp[1];
+        String pass = sp[2];
+        this.out.writeUTF("/connect " + username + " " + pass);
+        Object test = null;
+        try {
+            test = this.ois.readObject();
+        } catch (EOFException e) {
+            System.err.println("End of stream reached before object could be read");
+            return null;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         if(test == null){
             return null;
@@ -74,15 +86,19 @@ public class Client implements Serializable {
         }
     }
 
-    public String requestAddUser(User user) throws IOException, InterruptedException {
+    public String requestAddUser(User user) throws IOException {
         this.out.writeUTF("/addUser");
-        Thread.sleep(1000);
         this.oos.writeObject(user);
         String result = this.in.readUTF();
         return result;
     }
 
+    public void buyItem(User user,Item item) throws IOException {
+        this.out.writeUTF("/buy " +user.id +" "+ item.id);
+    }
+
     public void close() throws IOException {
         this.socket.close();
     }
+
 }
