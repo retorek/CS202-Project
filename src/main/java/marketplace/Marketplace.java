@@ -67,7 +67,8 @@ public class Marketplace {
         user.saveToDatabase(conn);
     }
 
-    public static ArrayList<Item> getAvailableItems() {
+    public static ArrayList<Item> getAvailableItems() throws SQLException {
+        items = loadAllItems(conn);
         ArrayList<Item> availableItems = new ArrayList<>();
         for (Item item : items) {
             if (item.isAvailable) {
@@ -86,7 +87,8 @@ public class Marketplace {
         return null;
     }
 
-    public static User getUserByUsername(String username) {
+    public static User getUserByUsername(String username) throws SQLException {
+        users = loadAllUsers(conn);
         for (User user : users) {
             if (user.username.equals(username)) {
                 return user;

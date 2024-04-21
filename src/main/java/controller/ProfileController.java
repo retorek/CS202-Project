@@ -162,6 +162,8 @@ public class ProfileController implements Initializable {
         try {
             db.connect();
             Marketplace.addItem(newItem, user, db.getConnection());
+            // Refresh the items list
+            updateItemsPostedTable();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -175,6 +177,7 @@ public class ProfileController implements Initializable {
     @FXML
     private void goToHomepage(ActionEvent event) throws IOException {
         MainController h = new MainController();
+
         h.changeScene("items-view.fxml");
     }
 

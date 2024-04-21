@@ -73,13 +73,27 @@ public class ItemsController implements Initializable{
             throw new RuntimeException(e);
         }
 
-        setItems();
+        loadItems();
 
     }
 
-    public void setItems(){
-        for(Item i : this.items){
+    private void loadItems() {
+        // Fetch the items from the server
+        try {
+            this.items = this.client.requestItems();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Clear the existing items from the vbox
+        vbox.getChildren().clear();
+
+        // Iterate over the fetched items
+        for (Item i : this.items) {
+            // Create a new VBox for the item
             VBox v = new VBox();
+
+            // Create a Buy button for the item
             Button test = new Button("Buy");
             test.setOnAction(actionEvent -> {
                 try {
@@ -92,33 +106,43 @@ public class ItemsController implements Initializable{
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
-
             });
 
+            // Add the Buy button to the VBox
             v.getChildren().add(test);
+
+            // Create labels for the item name and price, and add them to the VBox
             v.getChildren().add(new Label("Product name: " + i.name));
             v.getChildren().add(new Label("Product price: " + i.price));
 
+            // Create a label for the item availability
             Label label = new Label();
-            if(i.isAvailable){
+            if (i.isAvailable) {
                 label.setText("Product is available.");
                 label.setTextFill(Color.color(0, 1, 0));
-            }else{
+            } else {
                 label.setText("Product is not available.");
                 label.setTextFill(Color.color(1, 0, 0));
             }
+
+            // Add the availability label to the VBox
             v.getChildren().add(label);
 
+            // Add a line break to the VBox
             v.getChildren().add(lineBreak());
+
+            // Add the VBox to the vbox
             vbox.getChildren().add(v);
         }
     }
+
     public void refresh(ActionEvent event){
         for(Object o : vbox.getChildren().toArray()){
             vbox.getChildren().remove(o);
         }
-        setItems();
+        loadItems();
+        System.out.println("Refreshed");
+        System.out.println("Items: " + items.size());
     }
 
     private void checkItem(Item item) throws IOException {
@@ -138,6 +162,7 @@ public class ItemsController implements Initializable{
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("user.txt"));
         oos.writeObject(null);
 
+
         this.client.close();
 
         MainController h = new MainController();
@@ -146,10 +171,10 @@ public class ItemsController implements Initializable{
 
    @FXML
    private void checkProfile(ActionEvent event) throws IOException {
-        this.client.close();
-
        // Refresh the items list
        refresh(event);
+
+       this.client.close();
 
         MainController h = new MainController();
         h.changeScene("profile-view.fxml");

@@ -29,7 +29,6 @@ public class ServerThread extends Thread {
             DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
             oos = new ObjectOutputStream(out);
             ois = new ObjectInputStream(in);
-
             while (true) {
                 if (socket.isClosed()) {
                     break;
@@ -74,10 +73,12 @@ public class ServerThread extends Thread {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private Item checkItem(String id) {
+    private Item checkItem(String id) throws SQLException {
         for (Item item : Marketplace.getAvailableItems()) {
             if (item.id == Integer.parseInt(id)) {
                 return item;
@@ -106,7 +107,7 @@ public class ServerThread extends Thread {
     }
 
 
-    private User checkUser(String username, String password) {
+    private User checkUser(String username, String password) throws SQLException {
         User user = Marketplace.getUserByUsername(username);
         if (user != null && user.password.equals(password)) {
             return user;
