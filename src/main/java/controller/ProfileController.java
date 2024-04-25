@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import marketplace.Item;
 import marketplace.Marketplace;
 import marketplace.User;
@@ -17,7 +18,9 @@ import server.Database;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class ProfileController implements Initializable {
@@ -68,6 +71,8 @@ public class ProfileController implements Initializable {
     @FXML
     private TableColumn<Item, String> itemDescriptionColumn;
     @FXML
+    private TableColumn<Item, String> itemTypeColumn;
+    @FXML
     private TableColumn<Item, Double> itemPriceColumn;
     @FXML
     private TableColumn<Item, String> itemSoldColumn;
@@ -81,6 +86,14 @@ public class ProfileController implements Initializable {
     private TextField itemPriceField;
     @FXML
     private Button addItemButton;
+    @FXML
+    private ChoiceBox<String> itemTypeField;
+    @FXML
+    private Button browseImageButton;
+    @FXML
+    private Label wrongField;
+
+    private byte[] image;
 
     public ProfileController() throws SQLException {
     }
@@ -100,6 +113,9 @@ public class ProfileController implements Initializable {
         setProfileInformation();
         initializeOrderLogTable();
         initializeItemsPostedTable();
+        itemTypeField.getItems().add("Electronics");
+        itemTypeField.getItems().add("Sport");
+        itemTypeField.getItems().add("Home");
 
     }
 
@@ -126,6 +142,7 @@ public class ProfileController implements Initializable {
         itemIdColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("id"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("name"));
         itemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("description"));
+        itemTypeColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("type"));
         itemPriceColumn.setCellValueFactory(new PropertyValueFactory<Item, Double>("price"));
         itemSoldColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isSold()));
         // Load the data
@@ -149,14 +166,33 @@ public class ProfileController implements Initializable {
     }
 
     @FXML
+    private void browseImage() {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            try {
+                byte[] image = Files.readAllBytes(file.toPath());
+                // Store the image data somewhere to be used when creating the Item
+                this.browseImageButton.setText(file.getName());
+                this.image = image;
+                System.out.println("Image loaded");
+                System.out.println(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
     private void addItem() {
         // Get the input values
         String name = itemNameField.getText();
         String description = itemDescriptionField.getText();
+        String type = itemTypeField.getValue();
         double price = Double.parseDouble(itemPriceField.getText());
-
+        System.out.println("Image: " + image);
         // Create a new Item object
-        Item newItem = new Item(name, description, price);
+        Item newItem = new Item(name, description, type,price, image);
 
         // Add the new item to the marketplace
         try {
@@ -165,6 +201,9 @@ public class ProfileController implements Initializable {
             // Refresh the items list
             updateItemsPostedTable();
         } catch (SQLException e) {
+            wrongField.setText("Please fill all the fields");
+            wrongField.setVisible(true);
+            wrongField.setStyle("-fx-text-fill: red");
             e.printStackTrace();
         }
 
@@ -172,6 +211,13 @@ public class ProfileController implements Initializable {
         itemNameField.clear();
         itemDescriptionField.clear();
         itemPriceField.clear();
+        itemTypeField.setValue(null);
+        browseImageButton.setText("Browse");
+
+        wrongField.setText("Item added successfully");
+        wrongField.setVisible(true);
+        wrongField.setStyle("-fx-text-fill: green");
+
     }
 
     @FXML

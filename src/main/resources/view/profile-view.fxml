@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
@@ -57,28 +58,34 @@
                                 <TableView fx:id="itemsPostedTable" layoutX="-2.0" prefHeight="323.0" prefWidth="600.0">
                                     <columns>
                                         <TableColumn fx:id="itemIdColumn" prefWidth="75.0" text="id" />
-                                        <TableColumn fx:id="itemNameColumn" prefWidth="136.0" text="name" />
-                                        <TableColumn fx:id="itemDescriptionColumn" prefWidth="131.0" text="description" />
-                                        <TableColumn fx:id="itemPriceColumn" prefWidth="110.0" text="price" />
-                                        <TableColumn fx:id="itemSoldColumn" prefWidth="147.0" text="sold" />
+                                        <TableColumn fx:id="itemNameColumn" prefWidth="94.17911529541016" text="name" />
+                                        <TableColumn fx:id="itemDescriptionColumn" prefWidth="157.3208770751953" text="description" />
+                                        <TableColumn fx:id="itemTypeColumn" minWidth="4.0" prefWidth="93.51931762695312" text="type" />
+                                        <TableColumn fx:id="itemPriceColumn" minWidth="0.0" prefWidth="91.75851440429688" text="price" />
+                                        <TableColumn fx:id="itemSoldColumn" minWidth="0.78167724609375" prefWidth="87.5443115234375" text="sold" />
                                     </columns>
                                 </TableView>
                             </AnchorPane>
                         </Tab>
                         <Tab text="Post Item">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                <TextField fx:id="itemNameField" layoutX="87.0" layoutY="105.0" />
-                                <TextField fx:id="itemPriceField" layoutX="333.0" layoutY="105.0" />
-                                <Button fx:id="addItemButton" layoutX="272.0" layoutY="266.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" text="Add" onAction="#addItem" />
+                                <TextField fx:id="itemNameField" layoutX="39.0" layoutY="105.0" />
+                                <TextField fx:id="itemPriceField" layoutX="234.0" layoutY="103.0" />
+                                <Button fx:id="addItemButton" layoutX="274.0" layoutY="283.0" mnemonicParsing="false" onAction="#addItem" prefHeight="26.0" prefWidth="51.0" text="Add" />
                                 <Label layoutX="202.0" layoutY="27.0" prefHeight="41.0" prefWidth="172.0" text="Post a new item">
                                     <font>
                                         <Font size="25.0" />
                                     </font>
                                 </Label>
-                                <Label layoutX="87.0" layoutY="84.0" text="Name" />
-                                <Label layoutX="333.0" layoutY="84.0" text="Price" />
-                                <TextField fx:id="itemDescriptionField" layoutX="172.0" layoutY="169.0" prefHeight="79.0" prefWidth="255.0" />
-                                <Label layoutX="172.0" layoutY="151.0" text="Description" />
+                                <Label layoutX="39.0" layoutY="84.0" text="Name" />
+                                <Label layoutX="234.0" layoutY="82.0" text="Price" />
+                                <TextField fx:id="itemDescriptionField" layoutX="39.0" layoutY="171.0" prefHeight="79.0" prefWidth="255.0" />
+                                <Label layoutX="39.0" layoutY="153.0" text="Description" />
+                                <ChoiceBox fx:id="itemTypeField" layoutX="428.0" layoutY="104.0" prefWidth="150.0" />
+                                <Label layoutX="428.0" layoutY="82.0" text="Type" />
+                                <Button fx:id="browseImageButton" layoutX="374.0" layoutY="195.0" mnemonicParsing="false" onAction="#browseImage" prefHeight="25.0" prefWidth="108.0" text="Browse" />
+                                <Label layoutX="374.0" layoutY="171.0" text="Image" />
+                        <Label fx:id="wrongField" alignment="CENTER" contentDisplay="CENTER" layoutX="202.0" layoutY="260.0" prefHeight="17.0" prefWidth="199.0" />
                             </AnchorPane>
                         </Tab>
                     </tabs>

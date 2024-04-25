@@ -13,10 +13,8 @@ public class Client implements Serializable {
 
     private DataInputStream in;
     private DataOutputStream out;
-
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-
     private Socket socket;
 
     public Client(){

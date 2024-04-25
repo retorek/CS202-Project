@@ -1,6 +1,8 @@
 package controller;
 
 import exceptions.ItemNotAvailableException;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import marketplace.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +37,9 @@ public class ItemController implements Initializable {
     @FXML
     Button prev;
 
+    @FXML
+    private ImageView itemImage;
+
     Client client;
 
     Item item;
@@ -66,6 +71,12 @@ public class ItemController implements Initializable {
             productName.setText(item.name);
             productPrice.setText(String.valueOf(item.price));
             productDescription.setText(item.description);
+            if (item.getImage() != null) {
+                System.out.println("Image found");
+                InputStream is = new ByteArrayInputStream(item.getImage());
+                Image image = new Image(is);
+                itemImage.setImage(image);
+            }
 
             buyButton.setText("Buy");
             buyButton.setStyle("-fx-background-color: #00ff00");

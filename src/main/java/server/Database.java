@@ -8,6 +8,8 @@ import java.sql.Statement;
 
 
 public class Database {
+
+    //private static final String URL = "jdbc:mysql://localhost:3306/marketplace?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
     private static final String URL = "jdbc:mysql://localhost:3306/marketplace?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
     private static final String PASSWORD = "01102003:Amine";
@@ -50,8 +52,10 @@ public class Database {
                 "id INT AUTO_INCREMENT PRIMARY KEY," +
                 "name VARCHAR(50)," +
                 "description VARCHAR(255)," +
+                "type VARCHAR(50)," +
                 "price DECIMAL(10, 2)," +
-                "isAvailable BOOLEAN" +
+                "isAvailable BOOLEAN," +
+                "image BLOB" +
                 ");";
         statement.executeUpdate(createItemsTable);
 

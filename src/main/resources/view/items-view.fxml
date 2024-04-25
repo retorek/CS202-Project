@@ -6,20 +6,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.GridPane?>
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ItemsController">
-  <content>
-    <AnchorPane fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="597.0">
-         <children>
-            <ScrollPane fx:id="scroll" layoutY="74.0" prefHeight="319.0" prefWidth="592.0">
-               <content>
-                  <VBox fx:id="vbox" prefHeight="309.0" prefWidth="585.0" />
-               </content>
-            </ScrollPane>
-            <Button fx:id="updateButton" layoutX="34.0" layoutY="27.0" mnemonicParsing="false" onAction="#refresh" text="Update" />
-             <Button fx:id="credentials" layoutX="445.0" layoutY="27.0" maxWidth="Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkProfile" text="Button" />
-             <Button fx:id="logOutButton" layoutX="526.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-            <TextField fx:id="searchField" layoutX="126.0" layoutY="28.0" />
-            <Button fx:id="searchButton" layoutX="295.0" layoutY="27.0" mnemonicParsing="false" onAction="#searchItems" text="Search" />
-         </children></AnchorPane>
-  </content>
+    <content>
+        <AnchorPane fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="597.0">
+            <children>
+                <ScrollPane fx:id="scroll" layoutY="74.0" prefHeight="319.0" prefWidth="592.0">
+                    <content>
+                        <GridPane fx:id="grid" hgap="10" vgap="10" />
+                    </content>
+                </ScrollPane>
+                <Button fx:id="updateButton" layoutX="34.0" layoutY="27.0" mnemonicParsing="false" onAction="#refresh" text="Update" />
+                <Button fx:id="credentials" layoutX="445.0" layoutY="27.0" maxWidth="Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkProfile" text="Button" />
+                <Button fx:id="logOutButton" layoutX="526.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+                <TextField fx:id="searchField" layoutX="126.0" layoutY="28.0" />
+                <Button fx:id="searchButton" layoutX="295.0" layoutY="27.0" mnemonicParsing="false" onAction="#searchItems" text="Search" />
+            </children>
+        </AnchorPane>
+    </content>
 </ScrollPane>

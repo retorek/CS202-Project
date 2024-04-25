@@ -11,6 +11,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import server.Client;
 
 import java.io.*;
@@ -47,6 +50,9 @@ public class ItemsController implements Initializable{
     @FXML
     Button searchButton;
 
+    @FXML
+    GridPane grid;
+
     User user;
 
     ArrayList<Item> items;
@@ -54,8 +60,6 @@ public class ItemsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.client = new Client();
-
-        vbox.setPadding(new Insets(20));
         updateButton.setText("Update");
 
         try {
@@ -81,7 +85,6 @@ public class ItemsController implements Initializable{
         }
 
         loadItems();
-
     }
 
     private void loadItems() {
@@ -97,56 +100,65 @@ public class ItemsController implements Initializable{
     }
 
     private void appendItems(){
-        // Clear the existing items from the vbox
-        vbox.getChildren().clear();
+        // Clear the existing items from the grid
+        grid.getChildren().clear();
+
+        // Set the horizontal and vertical gaps between the cells
+        grid.setHgap(60);
+        grid.setVgap(20);
 
         // Iterate over the fetched items
-        for (Item i : this.items) {
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+
             // Create a new VBox for the item
             VBox v = new VBox();
 
-            // Create a Buy button for the item
-            Button test = new Button("Buy");
-            test.setOnAction(actionEvent -> {
+            // Set the padding around the edges of the VBox
+            v.setPadding(new Insets(10));
+
+            // Set the vertical spacing between the children of the VBox
+            v.setSpacing(2);
+
+            // Create a new ImageView for each item
+            ImageView imageView = new ImageView();
+            InputStream is = new ByteArrayInputStream(item.getImage());
+            Image image = new Image(is);
+            imageView.setImage(image);
+            imageView.setFitHeight(100); // Set the height
+            imageView.setFitWidth(100);  // Set the width
+
+            // Add the ImageView to the VBox
+            v.getChildren().add(imageView);
+
+            // Create labels for the item name, price, and type, and add them to the VBox
+            v.getChildren().add(new Label("Product name: " + item.name));
+            v.getChildren().add(new Label("Product price: " + item.price));
+            v.getChildren().add(new Label("Product type: " + item.type));
+
+            // Add the buy button to each item
+            Button buyButton = new Button("Buy");
+            buyButton.setOnAction(actionEvent -> {
                 try {
-                    this.client.close();
+                    // Save the item to a file
+                    ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("item.txt"));
+                    oos.writeObject(item);
+
+                    // Change the scene to the item view
+                    MainController h = new MainController();
+                    h.changeScene("item-view.fxml");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
-                    checkItem(i);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println(e.getMessage());
+                    System.out.println("Error buying item");
                 }
             });
+            v.getChildren().add(buyButton);
 
-            // Add the Buy button to the VBox
-            v.getChildren().add(test);
-
-            // Create labels for the item name and price, and add them to the VBox
-            v.getChildren().add(new Label("Product name: " + i.name));
-            v.getChildren().add(new Label("Product price: " + i.price));
-
-            // Create a label for the item availability
-            Label label = new Label();
-            if (i.isAvailable) {
-                label.setText("Product is available.");
-                label.setTextFill(Color.color(0, 1, 0));
-            } else {
-                label.setText("Product is not available.");
-                label.setTextFill(Color.color(1, 0, 0));
-            }
-
-            // Add the availability label to the VBox
-            v.getChildren().add(label);
-
-            // Add a line break to the VBox
-            v.getChildren().add(lineBreak());
-
-            // Add the VBox to the vbox
-            vbox.getChildren().add(v);
+            // Add the VBox to the grid
+            grid.add(v, i % 3, i / 3);
         }
     }
+
 
     public void searchItems(ActionEvent event) {
         String searchTerm = searchField.getText();
@@ -155,16 +167,17 @@ public class ItemsController implements Initializable{
     }
 
     public void refresh(ActionEvent event){
-        for(Object o : vbox.getChildren().toArray()){
-            vbox.getChildren().remove(o);
-        }
+        // Clear the grid
+        grid.getChildren().clear();
+
+        // Load the items
         loadItems();
+
         System.out.println("Refreshed");
         System.out.println("Items: " + items.size());
     }
 
     private void checkItem(Item item) throws IOException {
-
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("item.txt"));
         oos.writeObject(item);
 
@@ -184,7 +197,7 @@ public class ItemsController implements Initializable{
 
         MainController h = new MainController();
         h.changeScene("LoginView.fxml");
-   }
+    }
 
    @FXML
    private void checkProfile(ActionEvent event) throws IOException {
