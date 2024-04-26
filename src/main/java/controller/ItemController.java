@@ -91,6 +91,7 @@ public class ItemController implements Initializable {
             buyButton.setOnAction(actionEvent -> {
                 try {
                     this.client.buyItem(user, item);
+
                     comment.setText("Item bought");
                     comment.setStyle("-fx-text-fill: green");
                 } catch (IOException e) {

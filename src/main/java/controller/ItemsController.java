@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 public class ItemsController implements Initializable{
@@ -51,6 +52,9 @@ public class ItemsController implements Initializable{
     Button searchButton;
 
     @FXML
+    ComboBox<String> filterComboBox;
+
+    @FXML
     GridPane grid;
 
     User user;
@@ -60,7 +64,7 @@ public class ItemsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.client = new Client();
-        updateButton.setText("Update");
+        updateButton.setText("Refresh");
 
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream("user.txt"));
@@ -77,6 +81,14 @@ public class ItemsController implements Initializable{
         updateButton.setStyle("-fx-background-color: #5c9eda");
         logOutButton.setStyle("-fx-background-color: #5c9eda");
         searchButton.setStyle("-fx-background-color: #5c9eda");
+        filterComboBox.setStyle("-fx-background-color: #5c9eda");
+
+        filterComboBox.getItems().addAll("Electronics", "Sport", "Home");
+
+        filterComboBox.setOnAction(event -> {
+            String selectedType = filterComboBox.getValue();
+            filterItemsByType(selectedType);
+        });
 
         try {
             this.items = this.client.requestItems();
@@ -163,6 +175,23 @@ public class ItemsController implements Initializable{
     public void searchItems(ActionEvent event) {
         String searchTerm = searchField.getText();
         this.items = this.client.searchItems(searchTerm);
+        appendItems();
+    }
+
+    private void filterItemsByType(String type) {
+        // Fetch the items from the server
+        try {
+            this.items = this.client.requestItems();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Filter the items by type
+        this.items = (ArrayList<Item>) this.items.stream()
+                .filter(item -> item.type.equals(type))
+                .collect(Collectors.toList());
+
+        // Append the items to the vbox
         appendItems();
     }
 
